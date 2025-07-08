@@ -204,6 +204,46 @@ The system handles different query types with varying strategies:
 - **Month Queries** (MM/YYYY): Iterative daily search - O(days_in_month)
 - **Year/General Queries**: Neo4j semantic search - O(log n)
 
+## Troubleshooting
+
+### Legacy Pickle Files
+
+If you get an error like `Can't get attribute 'Hash' on module '__main__'`, you're trying to load a pickle file created with the original notebook code. Here are solutions:
+
+**Option 1: Convert using CLI**
+```bash
+python -m temporal_graph_rag convert-legacy old_file.pkl new_file.pkl
+```
+
+**Option 2: For Kaggle users**
+Download the standalone fixer:
+```python
+# In Kaggle
+import requests
+url = "https://raw.githubusercontent.com/your-repo/temporal-graph-rag/main/kaggle_pickle_fix.py"
+response = requests.get(url)
+with open("kaggle_pickle_fix.py", "w") as f:
+    f.write(response.text)
+
+# Fix your legacy file
+exec(open("kaggle_pickle_fix.py").read())
+kaggle_quick_fix("/kaggle/input/your-dataset/model.pkl", "fixed_model.pkl")
+```
+
+**Option 3: Re-build from scratch (recommended)**
+```bash
+python -m temporal_graph_rag build --input-file your_triplets.json --output-file new_graph.pkl
+```
+
+See `PICKLE_FIX_GUIDE.md` for detailed instructions.
+
+### Other Common Issues
+
+- **Import Errors**: Make sure you've installed with `pip install -e .`
+- **API Key Issues**: Check your `.env` file and API key validity
+- **Memory Issues**: For large graphs, consider using FAISS for embedding storage
+- **Neo4j Connection**: Ensure your Neo4j instance is running and credentials are correct
+
 ## Contributing
 
 1. Fork the repository
