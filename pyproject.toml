@@ -1,0 +1,93 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "temporal-graph-rag"
+version = "1.0.0"
+description = "Time-Aware Retrieval-Augmented Generation using Temporal Knowledge Graphs"
+readme = "README.md"
+requires-python = ">=3.8"
+license = {text = "MIT"}
+authors = [
+    {name = "Your Name", email = "your.email@domain.com"}
+]
+keywords = ["rag", "knowledge-graph", "temporal", "nlp", "question-answering"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "Topic :: Text Processing :: Linguistic",
+]
+
+dependencies = [
+    "sentence-transformers>=2.2.0",
+    "torch>=1.11.0",
+    "numpy>=1.21.0",
+    "pandas>=1.3.0",
+    "nltk>=3.7",
+    "rouge-score>=0.1.2",
+    "neo4j>=5.0.0",
+    "requests>=2.28.0",
+    "python-dateutil>=2.8.0",
+    "click>=8.0.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0.0",
+    "black>=22.0.0",
+    "flake8>=4.0.0",
+    "mypy>=0.950",
+    "jupyter>=1.0.0",
+]
+fast = [
+    "faiss-cpu>=1.7.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/yourusername/temporal-graph-rag"
+Documentation = "https://github.com/yourusername/temporal-graph-rag#readme"
+Repository = "https://github.com/yourusername/temporal-graph-rag.git"
+"Bug Tracker" = "https://github.com/yourusername/temporal-graph-rag/issues"
+
+[project.scripts]
+tgrag-build = "temporal_graph_rag.cli.build_graph:build_graph"
+tgrag-infer = "temporal_graph_rag.cli.inference:inference"
+tgrag-eval = "temporal_graph_rag.cli.evaluate:evaluate"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-dir]
+"" = "src"
+
+[tool.black]
+line-length = 88
+target-version = ['py38']
+include = '\.pyi?$'
+extend-exclude = '''
+/(
+  # directories
+  \.eggs
+  | \.git
+  | \.hg
+  | \.mypy_cache
+  | \.tox
+  | \.venv
+  | build
+  | dist
+)/
+'''
+
+[tool.mypy]
+python_version = "3.8"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = true

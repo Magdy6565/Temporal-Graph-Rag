@@ -1,0 +1,4 @@
+Sequential_Date,triplets
+03/15/2020,"[{""subject"": ""Obama"", ""predicate"": ""visited"", ""object"": ""Chicago""}, {""subject"": ""WHO"", ""predicate"": ""declared"", ""object"": ""pandemic""}]"
+01/20/2021,"[{""subject"": ""Biden"", ""predicate"": ""became"", ""object"": ""President""}, {""subject"": ""Capitol"", ""predicate"": ""experienced"", ""object"": ""insurrection""}]"
+07/20/2021,"[{""subject"": ""SpaceX"", ""predicate"": ""launched"", ""object"": ""rocket""}, {""subject"": ""Olympics"", ""predicate"": ""began"", ""object"": ""Tokyo""}]"
