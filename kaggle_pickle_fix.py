@@ -24,8 +24,69 @@ Example:
 
 import pickle
 import sys
+import re
+import calendar
+import numpy as np
 from typing import Any, Dict, List, Optional
-from datetime import datetime
+from datetime import datetime, timedelta
+from collections import defaultdict, deque
+import numpy as np
+
+
+class Node:
+    """Recreation of the original Node class from the notebook."""
+    
+    def __init__(self, subject):
+        self.subject = subject
+        self.edges = defaultdict(list)  # predicate -> list of objects
+        self.predicate_embeddings = {}  # predicate -> embedding vector
+
+    def add_edge(self, predicate, object_, embedder=None):
+        self.edges[predicate].append(object_)
+        if predicate not in self.predicate_embeddings:
+            # For Kaggle compatibility, we'll skip the embedder part
+            self.predicate_embeddings[predicate] = None
+    
+    def get_all_predicates(self) -> List[str]:
+        return list(self.edges.keys())
+    
+    def set_predicate_embedding(self, predicate: str, embedding):
+        self.predicate_embeddings[predicate] = embedding
+    
+    def get_predicate_embedding(self, predicate: str):
+        return self.predicate_embeddings.get(predicate)
+
+
+# Helper functions from the notebook
+def filter_triplets_with_dates_or_numbers(triplets):
+    """Filter triplets that contain dates or numbers."""
+    # Basic regex for detecting dates, numbers, and number words
+    DATE_REGEX = r"\b(\d{1,2}[ \-/])?(January|February|March|April|May|June|July|August|September|October|November|December)[ \-/]\d{2,4}\b|\b\d{4}\b|\b\d{1,4}[ ]?B\.?C\.?\b"
+    NUMERIC_REGEX = r"\b\d+\b|\bmillion\b|\bbillion\b|\bthousand\b|\bhundred\b|\bfew\b|\bseveral\b|\bone\b|\btwo\b|\bthree\b|\bfour\b|\bfive\b|\bsix\b|\bseven\b|\beight\b|\bnine\b|\bten\b"
+    
+    # Combine both into one for checking subject or object
+    COMBINED_REGEX = f"({DATE_REGEX})|({NUMERIC_REGEX})"
+    
+    filtered = []
+    for triplet in triplets:
+        subj = triplet["subject"].lower()
+        obj = triplet["object"].lower()
+        if re.search(COMBINED_REGEX, subj) or re.search(COMBINED_REGEX, obj):
+            filtered.append(triplet)
+    return filtered
+
+
+def filter_triplets_with_names_or_locations(triplets):
+    """Filter triplets that contain names or locations (simplified version)."""
+    # This is a simplified version - in practice you'd use NER
+    filtered = []
+    for triplet in triplets:
+        subj = triplet["subject"]
+        obj = triplet["object"]
+        # Simple heuristic: if it starts with capital letter, might be a name/location
+        if (subj and subj[0].isupper()) or (obj and obj[0].isupper()):
+            filtered.append(triplet)
+    return filtered
 
 
 class Hash:
@@ -95,10 +156,13 @@ class Hash:
 
 
 def register_hash_class():
-    """Register the Hash class so pickle can find it."""
+    """Register the Hash and Node classes so pickle can find them."""
     import __main__
     __main__.Hash = Hash
-    print("Hash class registered successfully!")
+    __main__.Node = Node
+    __main__.filter_triplets_with_dates_or_numbers = filter_triplets_with_dates_or_numbers
+    __main__.filter_triplets_with_names_or_locations = filter_triplets_with_names_or_locations
+    print("Hash and Node classes registered successfully!")
 
 
 def fix_legacy_pickle(filepath: str) -> Any:
