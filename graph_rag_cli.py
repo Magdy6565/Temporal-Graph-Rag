@@ -54,13 +54,15 @@ def main():
         try:
             graph = TemporalGraphRAG.load(args.kg_file)
         except (AttributeError, ModuleNotFoundError) as e:
-            if "Hash" in str(e):
+            if "Hash" in str(e) or "Node" in str(e):
                 print("Detected legacy pickle format. Attempting compatibility loading...")
                 register_legacy_classes()
                 legacy_obj = load_legacy_pickle(args.kg_file)
                 
-                # Convert to new format temporarily
-                temp_file = args.kg_file + ".converted.pkl"
+                # Convert to new format temporarily - use current directory instead of input directory
+                import os
+                filename = os.path.basename(args.kg_file)
+                temp_file = f"./temp_{filename}.converted.pkl"
                 print(f"Converting legacy format to new format: {temp_file}")
                 
                 from temporal_graph_rag.legacy_compat import convert_legacy_to_new_format
@@ -69,6 +71,13 @@ def main():
                 # Load the converted file
                 graph = TemporalGraphRAG.load(temp_file)
                 print("Legacy file converted and loaded successfully!")
+                
+                # Clean up the temporary file after loading
+                try:
+                    os.remove(temp_file)
+                    print("Temporary file cleaned up.")
+                except:
+                    print("Note: Could not clean up temporary file.")
             else:
                 raise e
         
