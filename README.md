@@ -5,7 +5,7 @@ A sophisticated Retrieval-Augmented Generation (RAG) system that leverages tempo
 ## Features
 
 - **Temporal Graph Construction**: Build time-indexed knowledge graphs from triplet data
-- **Multi-Modal Search Strategy**: 
+- **Multi-Modal Search Strategy**:
   - Precise date-based queries (MM/DD/YYYY)
   - Month-range queries (MM/YYYY)
   - Year-based semantic search
@@ -121,6 +121,7 @@ print(answer)
 Main class for temporal graph operations.
 
 **Methods:**
+
 - `__init__(start_date: str)`: Initialize with starting date
 - `insert_news(date: str, triplets: List[Dict])`: Add triplets for a specific date
 - `search(date: str, subject: str, predicate: str, question_type: str)`: Search for specific patterns
@@ -133,6 +134,7 @@ Main class for temporal graph operations.
 Represents entities in the knowledge graph.
 
 **Attributes:**
+
 - `subject`: Entity identifier
 - `edges`: Dictionary of predicates to objects
 - `predicate_embeddings`: Cached embeddings for predicates
@@ -140,6 +142,7 @@ Represents entities in the knowledge graph.
 ### CLI Commands
 
 #### Build Graph
+
 ```bash
 python -m temporal_graph_rag.build_graph [OPTIONS]
 
@@ -152,6 +155,7 @@ Options:
 ```
 
 #### Run Inference
+
 ```bash
 python -m temporal_graph_rag.inference [OPTIONS]
 
@@ -166,6 +170,7 @@ Options:
 ```
 
 #### Evaluate Model
+
 ```bash
 python -m temporal_graph_rag.evaluate [OPTIONS]
 
@@ -211,12 +216,14 @@ The system handles different query types with varying strategies:
 If you get an error like `Can't get attribute 'Hash' on module '__main__'`, you're trying to load a pickle file created with the original notebook code. Here are solutions:
 
 **Option 1: Convert using CLI**
+
 ```bash
 python -m temporal_graph_rag convert-legacy old_file.pkl new_file.pkl
 ```
 
 **Option 2: For Kaggle users**
 Download the standalone fixer:
+
 ```python
 # In Kaggle
 import requests
@@ -231,6 +238,7 @@ kaggle_quick_fix("/kaggle/input/your-dataset/model.pkl", "fixed_model.pkl")
 ```
 
 **Option 3: Re-build from scratch (recommended)**
+
 ```bash
 python -m temporal_graph_rag build --input-file your_triplets.json --output-file new_graph.pkl
 ```
@@ -251,27 +259,3 @@ See `PICKLE_FIX_GUIDE.md` for detailed instructions.
 3. Commit your changes (`git commit -m 'Add amazing feature'`)
 4. Push to the branch (`git push origin feature/amazing-feature`)
 5. Open a Pull Request
-
-## Citation
-
-If you use this code in your research, please cite:
-
-```bibtex
-@article{temporal_graph_rag_2024,
-  title={Temporal Graph RAG: Time-Aware Retrieval-Augmented Generation},
-  author={Your Name},
-  journal={Your Journal},
-  year={2024}
-}
-```
-
-## License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## Acknowledgments
-
-- Built with [Sentence-BERT](https://www.sbert.net/) for semantic embeddings
-- [Neo4j](https://neo4j.com/) for graph database operations
-- [Groq](https://groq.com/) for LLM inference
-- [FAISS](https://github.com/facebookresearch/faiss) for efficient similarity search
